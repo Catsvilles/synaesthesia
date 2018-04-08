@@ -3,7 +3,7 @@ import Tone from "tone";
 import songs from "./songs";
 import * as utils from "../utils";
 
-export const play = (seed, callback = null) => {
+export const play = (seed, callback = null, animationCallback = null) => {
   Tone.context.close();
   Tone.context = new AudioContext();
 
@@ -12,7 +12,7 @@ export const play = (seed, callback = null) => {
   const reverb = new Tone.Freeverb().toMaster();
   reverb.receive("reverb");
 
-  const generatedSettings = songs.funkyDownTempo.play();
+  const generatedSettings = songs.funkyDownTempo.play(animationCallback);
   //const generatedSettings = songs.drone.play();
 
   const bpm = utils.randomIntBetween(70, 90);

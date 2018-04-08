@@ -14,12 +14,18 @@ export const addChordProgression = (startTime, chordProgression, instrument, not
   loop.start(startTime);
 };
 
-export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop, mutationFunction) => {
+export const addDrums = (startTime, note, instrument, pattern, probability, shouldLoop, mutationFunction, animationCallback = null) => {
   const sequencer = new Tone.Sequence(
     function(time, hit) {
       if (hit === 1) {
         instrument.triggerAttackRelease(note, "16n", time);
       }
+      Tone.Draw.schedule(function() {
+        //the callback synced to the animation frame at the given time
+        if (animationCallback) {
+          animationCallback({ key: instrument.constructor.name, value: instrument.synth.envelope.value });
+        }
+      }, time);
     },
     pattern,
     "16n"
@@ -49,7 +55,7 @@ export const addSoloPart = (startTime, notes, instrument, noteLength, pattern, p
   sequencer.start(startTime);
 };
 
-export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, patterns, repeatTimes, shouldLoop) => {
+export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, patterns, repeatTimes, shouldLoop, animationCallback = null) => {
   const expandedSequence = [];
   for (const section of notes) {
     for (let ri = 0; ri < repeatTimes; ri++) {
@@ -77,6 +83,12 @@ export const addRepeatingSoloPart = (startTime, notes, instrument, noteLength, p
         expandedSequence.push(note);
         instrument.triggerAttackRelease(note, noteLength, time);
       }
+      Tone.Draw.schedule(function() {
+        //the callback synced to the animation frame at the given time
+        if (animationCallback) {
+          animationCallback({ key: "bass", value: instrument.synth.envelope.value });
+        }
+      }, time);
     },
     expandedPattern,
     "16n"

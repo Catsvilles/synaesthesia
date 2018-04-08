@@ -6,8 +6,7 @@ const initialState = { seed: "yeah", playButtonText: "Play", generatedSettings: 
 export default (state = initialState, action) => {
   switch (action.type) {
     case actions.SYNTH_PLAY: {
-      const generatedSettings = synth.play(state.seed);
-      state = { ...state, generatedSettings: generatedSettings, playButtonText: "Stop", isPlaying: true };
+      state = { ...state, generatedSettings: action.payload, playButtonText: "Stop", isPlaying: true };
       break;
     }
 
@@ -29,6 +28,10 @@ export default (state = initialState, action) => {
       break;
     }
 
+    case actions.ENVELOPE_VALUE: {
+      state = { ...state, envelopeValues: { ...state.envelopeValues, [action.payload.key]: action.payload.value } };
+      break;
+    }
     default:
       break;
   }

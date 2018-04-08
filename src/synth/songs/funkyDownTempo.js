@@ -5,7 +5,7 @@ import instruments from "../instruments";
 import * as rythyms from "../rythyms";
 import * as utils from "../../utils";
 
-export const play = () => {
+export const play = (animationCallback = null) => {
   const keyType = scales.getRandomScaleType();
   const songKey = {
     root: scales.getRandomRootNote(),
@@ -51,7 +51,8 @@ export const play = () => {
     chordProgressionNotes: scales.rootNotesFromChordProgression(chordProgression),
     chordInstrument: chordInstrument.constructor.name,
     bassInstrument: bassInstrument.constructor.name,
-    motifInstrument: motifInstrument.constructor.name
+    motifInstrument: motifInstrument.constructor.name,
+    test: bassInstrument
   };
 
   const changeRythym = (sequencer, newRythym) => {
@@ -65,25 +66,70 @@ export const play = () => {
     }
   };
 
-  parts.addDrums("0:0:0", songKey.root + "0", new instruments.drums.KickDrum(), kickRythym, 1, true, function(sequencer) {
-    changeRythym(sequencer, rythyms.randomKickRythym());
-  });
+  parts.addDrums(
+    "0:0:0",
+    songKey.root + "0",
+    new instruments.drums.KickDrum(),
+    kickRythym,
+    1,
+    true,
+    function(sequencer) {
+      changeRythym(sequencer, rythyms.randomKickRythym());
+    },
+    animationCallback
+  );
 
-  parts.addDrums("0:0:0", undefined, new instruments.drums.Slap(), snareRythym, 0.9, true, function(sequencer) {
-    changeRythym(sequencer, rythyms.randomSnareRythym());
-  });
+  parts.addDrums(
+    "0:0:0",
+    undefined,
+    new instruments.drums.Slap(),
+    snareRythym,
+    0.9,
+    true,
+    function(sequencer) {
+      changeRythym(sequencer, rythyms.randomSnareRythym());
+    },
+    animationCallback
+  );
 
-  parts.addDrums("0:0:0", undefined, new instruments.drums.HiHat(), hihatRythym, 0.9, true, function(sequencer) {
-    changeRythym(sequencer, rythyms.randomHiHatRythym());
-  });
+  parts.addDrums(
+    "0:0:0",
+    undefined,
+    new instruments.drums.HiHat(),
+    hihatRythym,
+    0.9,
+    true,
+    function(sequencer) {
+      changeRythym(sequencer, rythyms.randomHiHatRythym());
+    },
+    animationCallback
+  );
 
-  parts.addDrums("0:0:0", undefined, new instruments.drums.Shaker(), shakerRythym, 0.8, true, function(sequencer) {
-    changeRythym(sequencer, rythyms.randomShakerRythym());
-  });
+  parts.addDrums(
+    "0:0:0",
+    undefined,
+    new instruments.drums.Shaker(),
+    shakerRythym,
+    0.8,
+    true,
+    function(sequencer) {
+      changeRythym(sequencer, rythyms.randomShakerRythym());
+    },
+    animationCallback
+  );
 
-  parts.addDrums("0:0:0", undefined, new instruments.drums.OpenHat(openHatFrequency), openHatRythym, 0.8, true, function(sequencer) {
-    changeRythym(sequencer, rythyms.randomOpenHatRythym());
-  });
+  parts.addDrums(
+    "0:0:0",
+    undefined,
+    new instruments.drums.OpenHat(openHatFrequency),
+    openHatRythym,
+    0.8,
+    true,
+    function(sequencer) {
+      changeRythym(sequencer, rythyms.randomOpenHatRythym());
+    },
+    animationCallback
+  );
 
   parts.addChordProgression("0:0:0", chordProgression, chordInstrument, `${chordProgressionBars}m`, `${chordProgressionBars}m`, true);
 
@@ -100,7 +146,8 @@ export const play = () => {
     "4n",
     bassLinePatterns,
     chordProgressionBars,
-    true
+    true,
+    animationCallback
   );
 
   const motifOctave = songKey.chordOctave + 1;

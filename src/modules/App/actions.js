@@ -2,9 +2,22 @@ import * as actions from "./actionTypes";
 import * as synth from "../../synth/synth";
 
 export const Play = () => {
+  return (dispatch, getState) => {
+    const generatedSettings = synth.play(getState().seed, null, kv => {
+      dispatch(UpdateEnvelopeValue(kv));
+    });
+    dispatch({
+      type: actions.SYNTH_PLAY,
+      payload: generatedSettings
+    });
+  };
+};
+
+export const UpdateEnvelopeValue = value => {
   return dispatch => {
     dispatch({
-      type: actions.SYNTH_PLAY
+      type: actions.ENVELOPE_VALUE,
+      payload: value
     });
   };
 };
@@ -19,14 +32,14 @@ export const Stop = () => {
 
 export const PlayButtonClick = () => {
   return (dispatch, getState) => {
-    getState().app.isPlaying ? dispatch({ type: actions.SYNTH_STOP }) : dispatch({ type: actions.SYNTH_PLAY });
+    getState().app.isPlaying ? dispatch({ type: actions.SYNTH_STOP }) : dispatch(Play());
   };
 };
 
 export const SetInitialSeed = newSeed => {
   return dispatch => {
     dispatch({ type: actions.UPDATE_SEED, payload: newSeed });
-    dispatch({ type: actions.SYNTH_PLAY });
+    dispatch(Play());
   };
 };
 

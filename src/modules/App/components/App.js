@@ -4,6 +4,8 @@ import "./App.css";
 import { version } from "../../../../package.json";
 import NowPlayingSection from "./NowPlayingSection";
 import GenerationOptions from "./GenerationOptions";
+import P5Wrapper from "react-p5-wrapper";
+import Visualisation from "./Visualisation";
 
 class App extends Component {
   constructor() {
@@ -30,41 +32,45 @@ class App extends Component {
   };
   render() {
     return (
-      <div className="container text-center">
-        <div className="main-panel col-md-6 offset-md-3">
-          <div className="row">
-            <div className="col-sm-12">
-              <h1 className="main-title">Synaesthesia</h1>
-              <p className="lead">
-                A Web Audio experiment by <a href="https://soundcloud.com/wheelibin">wheelibin</a>
-              </p>
+      <div>
+        <div className="container text-center">
+          <div className="main-panel col-md-6 offset-md-3">
+            <div className="row">
+              <div className="col-sm-12">
+                <h1 className="main-title">Synaesthesia</h1>
+                <p className="lead">
+                  A Web Audio experiment by <a href="https://soundcloud.com/wheelibin">wheelibin</a>
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-12">
-              <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
-                {this.props.playButtonText}
-              </button>
-              <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
+            <div className="row">
+              <div className="col-sm-12">
+                <button onClick={this.props.actions.PlayButtonClick} className="main-panel__play-button btn btn-block btn-outline-light btn-lg">
+                  {this.props.playButtonText}
+                </button>
+                <NowPlayingSection isPlaying={this.props.isPlaying} generatedSettings={this.props.generatedSettings} />
+              </div>
             </div>
+            <GenerationOptions
+              isPlaying={this.props.isPlaying}
+              seed={this.props.seed}
+              onRandomise={this.randomiseSeed}
+              onSeedChange={this.handleSeedChange}
+            />
+
+            <p className="text-justify">
+              The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown above. This can be
+              shared and entered again to recreate the exact combination of random parameters used to generate this song. Try experimenting by
+              entering your own seed, it can be any text, word, or phrase!
+            </p>
+            <p className="text-justify">
+              All the code, and a bit more info, can be found on GitHub here:{" "}
+              <a href="https://github.com/wheelibin/synaesthesia">https://github.com/wheelibin/synaesthesia</a>
+            </p>
           </div>
-          <GenerationOptions
-            isPlaying={this.props.isPlaying}
-            seed={this.props.seed}
-            onRandomise={this.randomiseSeed}
-            onSeedChange={this.handleSeedChange}
-          />
-          <p className="text-justify">
-            The music is randomly generated within certain musical constraints, the seed for the currently playing song is shown above. This can be
-            shared and entered again to recreate the exact combination of random parameters used to generate this song. Try experimenting by entering
-            your own seed, it can be any text, word, or phrase!
-          </p>
-          <p className="text-justify">
-            All the code, and a bit more info, can be found on GitHub here:{" "}
-            <a href="https://github.com/wheelibin/synaesthesia">https://github.com/wheelibin/synaesthesia</a>
-          </p>
+          <small className="version">v{version}</small>
         </div>
-        <small className="version">v{version}</small>
+        <P5Wrapper sketch={Visualisation} envelopeValues={this.props.envelopeValues} />
       </div>
     );
   }
